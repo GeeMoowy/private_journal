@@ -1,0 +1,10 @@
+{% extends 'diary/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+Главная страница
+<div>
+    <a href="{% url 'diary:diary_list' %}" class="btn btn-primary">К дневнику</a>
+</div>
+{% endblock %}

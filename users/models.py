@@ -43,6 +43,10 @@ class CustomUser(AbstractUser):
         blank=True,
         help_text='Загрузите свое фото'
     )
+    nickname = models.CharField(
+        max_length=50,
+        blank=True
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -52,6 +56,11 @@ class CustomUser(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+    def save(self, *args, **kwargs):
+        if not self.nickname:  # Если nickname не указан
+            self.nickname = self.email.split('@')[0]  # Берем часть до @
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'Пользователь {self.email}'

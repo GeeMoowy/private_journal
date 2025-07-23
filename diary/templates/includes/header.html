@@ -1,0 +1,19 @@
+{% load static %}
+
+<header class="header">
+    <!-- Ссылка на главную страницу -->
+    <a href="{% url 'diary:home' %}" class="header__logo">
+        <span>Личный Дневник</span>
+    </a>
+
+    <nav class="header__nav">
+        {% if user.is_authenticated %}
+            <a href="{% url 'diary:diary_list' %}">Мой дневник</a>
+            <a>Профиль</a>
+            <a href="{% url 'logout' %}">Выйти</a>
+        {% else %}
+            <a href="{% url 'login' %}">Войти</a>
+            <a href="{% url 'register' %}">Регистрация</a>
+        {% endif %}
+    </nav>
+</header>

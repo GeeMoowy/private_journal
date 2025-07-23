@@ -1,20 +1,19 @@
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
-
-User = get_user_model()
 
 
 class Diary(models.Model):
     """ """
 
-    user = models.ForeignKey(
-        User,
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='diaries',
-        verbose_name='Пользователь - создатель дневника'
+        verbose_name='Владелец',
     )
     created_at = models.DateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
+        verbose_name = 'Дата создания'
     )
     title = models.CharField(
         max_length=100,
@@ -27,6 +26,7 @@ class Diary(models.Model):
     )
     MOOD_CHOICES = [
         ('😊', 'Счастье'),
+        ('😂', 'Юмор'),
         ('😟', 'Грусть'),
         ('😡', 'Злость'),
         ('😫', 'Усталость'),
@@ -58,5 +58,16 @@ class Diary(models.Model):
         verbose_name='Время чтения (мин)'
     )
 
+    class Meta:
+        verbose_name = 'Дневник'
+        verbose_name_plural = 'Дневники'
+
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        # Автоматический расчет времени чтения (пример: 1 мин на 200 слов)
+        if not self.read_time and self.content:
+            word_count = len(self.content.split())
+            self.read_time = max(1, round(word_count / 200))
+        super().save(*args, **kwargs)
