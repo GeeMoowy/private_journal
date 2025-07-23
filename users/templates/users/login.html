@@ -1,0 +1,39 @@
+{% extends 'diary/base.html' %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Вход</div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                Неверный email или пароль
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Email</label>
+                            <input type="email" name="username" class="form-control" required id="id_username">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Пароль</label>
+                            <input type="password" name="password" class="form-control" required id="id_password">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Войти</button>
+                        <a href="{% url 'users:register' %}" class="btn btn-link">Регистрация</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

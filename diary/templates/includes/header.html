@@ -1,19 +1,64 @@
 {% load static %}
 
-<header class="header">
-    <!-- Ссылка на главную страницу -->
-    <a href="{% url 'diary:home' %}" class="header__logo">
-        <span>Личный Дневник</span>
-    </a>
+<header class="navbar navbar-expand navbar-dark bg-primary mb-4 py-2">
+    <div class="container">
+        <!-- Логотип/название -->
+        <a href="{% url 'diary:home' %}" class="navbar-brand d-flex align-items-center me-4">
+            <span class="fw-bold fs-4">Личный Дневник</span>
+        </a>
 
-    <nav class="header__nav">
-        {% if user.is_authenticated %}
-            <a href="{% url 'diary:diary_list' %}">Мой дневник</a>
-            <a>Профиль</a>
-            <a>Выйти</a>
-        {% else %}
-            <a>Войти</a>
-            <a>Регистрация</a>
-        {% endif %}
-    </nav>
+        <!-- Основное меню -->
+        <div class="navbar-nav ms-auto align-items-center flex-row gap-3">
+            {% if user.is_authenticated %}
+                <!-- Прямые ссылки вместо выпадающего меню -->
+                <a class="nav-link px-3" href="{% url 'users:profile' %}">
+                    <i class="bi bi-person-circle me-1"></i> Профиль
+                </a>
+                <form action="{% url 'users:logout' %}" method="post" class="d-flex">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link btn btn-link px-3">
+                        <i class="bi bi-box-arrow-right me-1"></i> Выйти
+                    </button>
+                </form>
+            {% else %}
+                <!-- Кнопки для неавторизованных пользователей -->
+                <a class="nav-link btn btn-outline-light px-3 py-1" href="{% url 'users:login' %}">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Войти
+                </a>
+                <a class="nav-link btn btn-outline-light px-3 py-1" href="{% url 'users:register' %}">
+                    <i class="bi bi-person-plus me-1"></i> Регистрация
+                </a>
+            {% endif %}
+        </div>
+    </div>
 </header>
+
+<style>
+    .navbar {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-outline-light:hover {
+        color: var(--bs-primary) !important;
+    }
+
+    .nav-link.btn {
+        transition: all 0.2s ease;
+        border-radius: 20px;
+    }
+
+    .nav-link.btn:hover {
+        transform: translateY(-1px);
+    }
+
+    /* Стили для кнопки выхода */
+    .btn-link {
+        color: rgba(255, 255, 255, 0.75);
+        text-decoration: none;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .btn-link:hover {
+        color: white !important;
+    }
+</style>

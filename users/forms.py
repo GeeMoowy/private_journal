@@ -77,3 +77,9 @@ class RegisterForm(UserCreationForm):
         if CustomUser.objects.filter(email=email).exists():
             raise forms.ValidationError("Пользователь с таким email уже зарегистрирован")
         return email
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['avatar', 'nickname']

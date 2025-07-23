@@ -25,7 +25,7 @@ class DiaryListView(LoginRequiredMixin, ListView):
         # Только записи текущего пользователя + сортировка по дате
         return Diary.objects.filter(owner=self.request.user).order_by('-created_at')
 
-# Детали одной записи (Read)
+
 class DiaryDetailView(LoginRequiredMixin, DetailView):
     model = Diary
     template_name = 'diary/diary_detail.html'
@@ -35,7 +35,7 @@ class DiaryDetailView(LoginRequiredMixin, DetailView):
         # Защита от просмотра чужих записей
         return Diary.objects.filter(owner=self.request.user)
 
-# Создание записи (Create)
+
 class DiaryCreateView(LoginRequiredMixin, CreateView):
     model = Diary
     template_name = 'diary/diary_create.html'
@@ -48,7 +48,7 @@ class DiaryCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, 'Запись успешно создана!')
         return super().form_valid(form)
 
-# Редактирование записи (Update)
+
 class DiaryUpdateView(LoginRequiredMixin, UpdateView):
     model = Diary
     template_name = 'diary/diary_create.html'
@@ -63,7 +63,7 @@ class DiaryUpdateView(LoginRequiredMixin, UpdateView):
         # Только свои записи можно редактировать
         return Diary.objects.filter(owner=self.request.user)
 
-# Удаление записи (Delete)
+
 class DiaryDeleteView(LoginRequiredMixin, DeleteView):
     model = Diary
     template_name = 'diary/diary_confirm_delete.html'

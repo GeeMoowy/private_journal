@@ -13,7 +13,7 @@ class Diary(models.Model):
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
-        verbose_name = 'Дата создания'
+        verbose_name='Дата создания'
     )
     title = models.CharField(
         max_length=100,
