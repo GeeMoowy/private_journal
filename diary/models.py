@@ -66,8 +66,8 @@ class Diary(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        # Автоматический расчет времени чтения (пример: 1 мин на 200 слов)
-        if not self.read_time and self.content:
+        # Всегда пересчитываем время чтения, если есть содержимое
+        if self.content:
             word_count = len(self.content.split())
             self.read_time = max(1, round(word_count / 200))
         super().save(*args, **kwargs)

@@ -1,0 +1,15 @@
+{% extends 'diary/base.html' %}
+
+{% block title %}Создание-Редактирование{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if object %}Редактирование{% else %}Новая запись{% endif %}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'diary:diary_list' %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
+{% endblock %}

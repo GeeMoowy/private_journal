@@ -9,6 +9,8 @@ app_name = DiaryConfig.name
 urlpatterns = [
     path('', DiaryView.as_view(), name='home'),
     path('list/', DiaryListView.as_view(), name='diary_list'),
-    path('<int:pk>/', DiaryDeleteView.as_view(), name='diary_detail'),
+    path('diary_detail/<int:pk>', DiaryDetailView.as_view(), name='diary_detail'),
     path('create/', DiaryCreateView.as_view(), name='diary_create'),
+    path('<int:pk>/diary_update/', DiaryUpdateView.as_view(), name='diary_update'),
+    path('<int:pk>/diary_delete/', DiaryDeleteView.as_view(), name='diary_delete')
 ]

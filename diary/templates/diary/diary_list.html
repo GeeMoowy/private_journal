@@ -1,27 +1,31 @@
 {% extends 'diary/base.html' %}
 
-{% block title %}Главная{% endblock %}
+{% block title %}Мои записи{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-  <h2>Мой дневник</h2>
-  <a href="{% url 'diary:diary_create' %}" class="btn btn-primary mb-3">Новая запись</a>
+    <h1 class="mb-4">Мои записи</h1>
+    <a href="{% url 'diary:diary_create' %}" class="btn btn-primary mb-3">+ Новая запись</a>
 
-  {% for diary in diaries %}
+    {% for diary in diaries %}
     <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title">{{ diary.title }}</h5>
-        <p class="card-text">{{ diary.content|truncatechars:100 }}</p>
-        <div class="d-flex justify-content-between">
-          <small class="text-muted">{{ diary.created_at|date:"d.m.Y H:i" }}</small>
-          <div>
-            <a href="{% url 'diary:diary_detail' diary.pk %}" class="btn btn-sm btn-outline-primary">Подробнее</a>
-          </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ diary.title }}</h5>
+            <p class="card-text">{{ diary.content|truncatechars:150 }}</p>
+            <div class="d-flex justify-content-between">
+                <small class="text-muted">
+                    {{ diary.created_at|date:"d.m.Y" }} |
+                    Настроение: {{ diary.get_mood_display }} |
+                    {{ diary.read_time }} мин. чтения
+                </small>
+                <div>
+                    <a href="{% url 'diary:diary_detail' diary.pk %}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  {% empty %}
+    {% empty %}
     <div class="alert alert-info">У вас пока нет записей</div>
-  {% endfor %}
+    {% endfor %}
 </div>
 {% endblock %}

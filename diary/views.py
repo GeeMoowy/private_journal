@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 
 from diary.models import Diary
+from diary.forms import DiaryForm
 
 
 class DiaryView(ListView):
@@ -14,8 +15,9 @@ class DiaryView(ListView):
     context_object_name = 'diaries'
 
 
-# Список всех записей (Read)
 class DiaryListView(LoginRequiredMixin, ListView):
+    """  """
+
     model = Diary
     template_name = 'diary/diary_list.html'
     context_object_name = 'diaries'
@@ -27,6 +29,8 @@ class DiaryListView(LoginRequiredMixin, ListView):
 
 
 class DiaryDetailView(LoginRequiredMixin, DetailView):
+    """  """
+
     model = Diary
     template_name = 'diary/diary_detail.html'
     context_object_name = 'diary'
@@ -37,27 +41,29 @@ class DiaryDetailView(LoginRequiredMixin, DetailView):
 
 
 class DiaryCreateView(LoginRequiredMixin, CreateView):
+    """  """
+
     model = Diary
-    template_name = 'diary/diary_create.html'
-    fields = ['title', 'content', 'mood', 'image', 'is_public', 'read_time']
-    success_url = reverse_lazy('diary-list')
+    form_class = DiaryForm
+    template_name = 'diary/diary_form.html'
+    success_url = reverse_lazy('diary:diary_list')
 
     def form_valid(self, form):
         # Автоматическое привязывание к текущему пользователю
-        form.instance.user = self.request.user
+        form.instance.owner = self.request.user
         messages.success(self.request, 'Запись успешно создана!')
         return super().form_valid(form)
 
 
 class DiaryUpdateView(LoginRequiredMixin, UpdateView):
     model = Diary
-    template_name = 'diary/diary_create.html'
-    fields = ['title', 'content', 'mood', 'image', 'is_public', 'read_time']
+    form_class = DiaryForm
+    template_name = 'diary/diary_form.html'
     context_object_name = 'diary'
 
     def get_success_url(self):
         messages.success(self.request, 'Запись обновлена!')
-        return reverse_lazy('diary-detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('diary:diary_detail', kwargs={'pk': self.object.pk})
 
     def get_queryset(self):
         # Только свои записи можно редактировать
@@ -67,7 +73,7 @@ class DiaryUpdateView(LoginRequiredMixin, UpdateView):
 class DiaryDeleteView(LoginRequiredMixin, DeleteView):
     model = Diary
     template_name = 'diary/diary_confirm_delete.html'
-    success_url = reverse_lazy('diary-list')
+    success_url = reverse_lazy('diary:diary_list')
     context_object_name = 'diary'
 
     def delete(self, request, *args, **kwargs):
