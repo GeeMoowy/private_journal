@@ -1,10 +1,18 @@
 {% load static %}
 
-<header class="navbar navbar-expand navbar-dark bg-primary mb-4 py-2">
+<header class="navbar navbar-expand navbar-dark bg-secondary mb-4 py-2">
     <div class="container">
         <!-- Логотип/название -->
         <a href="{% url 'diary:home' %}" class="navbar-brand d-flex align-items-center me-4">
             <span class="fw-bold fs-4">Личный Дневник</span>
+            <div class="theme-switcher ms-3">
+                <button id="male-theme" class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2">
+                    <i class="bi bi-gender-male me-1"></i> Мужской
+                </button>
+                <button id="female-theme" class="btn btn-sm btn-outline-pink rounded-pill px-3">
+                    <i class="bi bi-gender-female me-1"></i> Женский
+                </button>
+            </div>
         </a>
 
         <!-- Основное меню -->
@@ -60,5 +68,31 @@
 
     .btn-link:hover {
         color: white !important;
+    }
+    .btn-outline-pink {
+        color: #ff6b9a;
+        border-color: #ff6b9a;
+    }
+    .btn-outline-pink:hover {
+        background-color: #ff6b9a;
+        color: white;
+    }
+
+    /* Анимация при наведении */
+    .theme-switcher .btn {
+        transition: all 0.3s ease;
+        transform: scale(1);
+    }
+    .theme-switcher .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Активная тема */
+    .male-theme #male-theme,
+    .female-theme #female-theme {
+        background-color: var(--primary-color);
+        color: white !important;
+        border-color: transparent;
     }
 </style>

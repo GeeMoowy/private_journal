@@ -1,4 +1,4 @@
-from django.views.generic import ListView, UpdateView, DetailView, DeleteView, CreateView
+from django.views.generic import ListView, UpdateView, DetailView, DeleteView, CreateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -7,12 +7,14 @@ from diary.models import Diary
 from diary.forms import DiaryForm
 
 
-class DiaryView(ListView):
-    """  """
-
-    model = Diary
+class HomeView(TemplateView):
     template_name = 'diary/home.html'
-    context_object_name = 'diaries'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['user'] = self.request.user
+        return context
 
 
 class DiaryListView(LoginRequiredMixin, ListView):
