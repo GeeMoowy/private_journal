@@ -1,7 +1,8 @@
 from django.urls import path
 
 from diary.apps import DiaryConfig
-from diary.views import HomeView, DiaryListView, DiaryDetailView, DiaryCreateView, DiaryUpdateView, DiaryDeleteView
+from diary.views import HomeView, DiaryListView, DiaryDetailView, DiaryCreateView, DiaryUpdateView, DiaryDeleteView, \
+    PublicDiaryListView, PublicDiaryDetailView
 
 app_name = DiaryConfig.name
 
@@ -12,5 +13,7 @@ urlpatterns = [
     path('diary_detail/<int:pk>', DiaryDetailView.as_view(), name='diary_detail'),
     path('create/', DiaryCreateView.as_view(), name='diary_create'),
     path('<int:pk>/diary_update/', DiaryUpdateView.as_view(), name='diary_update'),
-    path('<int:pk>/diary_delete/', DiaryDeleteView.as_view(), name='diary_delete')
+    path('<int:pk>/diary_delete/', DiaryDeleteView.as_view(), name='diary_delete'),
+    path('public/', PublicDiaryListView.as_view(), name='public_list'),
+    path('public/<int:pk>/', PublicDiaryDetailView.as_view(), name='public_detail'),
 ]

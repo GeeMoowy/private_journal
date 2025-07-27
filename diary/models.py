@@ -61,6 +61,9 @@ class Diary(models.Model):
     class Meta:
         verbose_name = 'Дневник'
         verbose_name_plural = 'Дневники'
+        permissions = [
+            ("can_delete_public_diaries", "Может удалять любые публичные записи"),
+        ]
 
     def __str__(self):
         return self.title

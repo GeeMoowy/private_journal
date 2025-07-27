@@ -1,5 +1,6 @@
+from django.core.exceptions import PermissionDenied
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView, CreateView, TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 
@@ -75,13 +76,47 @@ class DiaryUpdateView(LoginRequiredMixin, UpdateView):
 class DiaryDeleteView(LoginRequiredMixin, DeleteView):
     model = Diary
     template_name = 'diary/diary_confirm_delete.html'
-    success_url = reverse_lazy('diary:diary_list')
     context_object_name = 'diary'
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, 'Запись удалена!')
-        return super().delete(request, *args, **kwargs)
+    def get_success_url(self):
+        # Определяем, откуда пришел запрос (публичная/личная запись)
+        if self.object.is_public and not self.object.owner == self.request.user:
+            messages.success(self.request, 'Публичная запись удалена!')
+            return reverse_lazy('diary:public_list')
+        else:
+            messages.success(self.request, 'Ваша запись удалена!')
+            return reverse_lazy('diary:diary_list')
 
     def get_queryset(self):
-        # Только свои записи можно удалять
-        return Diary.objects.filter(owner=self.request.user)
+        queryset = Diary.objects.filter(owner=self.request.user)
+        if self.request.user.has_perm('diary.can_delete_public_diaries'):
+            queryset |= Diary.objects.filter(is_public=True)
+        return queryset
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj not in self.get_queryset():
+            raise PermissionDenied("У вас нет прав на удаление этой записи.")
+        return super().dispatch(request, *args, **kwargs)
+
+
+class PublicDiaryListView(ListView):
+    """  """
+
+    model = Diary
+    template_name = 'diary/public_diary_list.html'
+    context_object_name = 'public_diaries'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = Diary.objects.filter(is_public=True)
+        return queryset.exclude(owner=self.request.user).order_by('-created_at')
+
+
+class PublicDiaryDetailView(DetailView):
+    model = Diary
+    template_name = 'diary/public_diary_detail.html'
+    context_object_name = 'diary'
+
+    def get_queryset(self):
+        return Diary.objects.filter(is_public=True)
