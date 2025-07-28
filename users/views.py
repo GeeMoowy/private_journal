@@ -49,6 +49,7 @@ class ProfileEditView(UpdateView):
     model = User
     form_class = UserProfileForm
     template_name = 'profile.html'
+    context_object_name = 'user'
     success_url = reverse_lazy('diary:home')
 
     def get_object(self, queryset=None):

@@ -21,10 +21,10 @@
                 <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInDown">{{ user.nickname|default:user.email }}, добро пожаловать в твой личный дневник</h1>
                 <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">Запечатлейте свои мысли, эмоции и воспоминания в безопасном пространстве</p>
                 <a href="{% url 'diary:diary_list' %}" class="btn btn-light btn-lg px-4 animate__animated animate__fadeIn animate__delay-2s">
-                    К записям <i class="bi bi-plus-circle ms-2"></i>
+                    К записям <i class="bi bi-sticky ms-2"></i>
                 </a>
                 <a href="{% url 'diary:public_list' %}" class="btn btn-light btn-lg px-4 animate__animated animate__fadeIn animate__delay-2s">
-                    К пабликам <i class="bi bi-plus-circle ms-2"></i>
+                    К пабликам <i class="bi bi-table ms-2"></i>
                 </a>
                 {% endif %}
             </div>

@@ -4,97 +4,215 @@
 
 {% block extra_css %}
 <style>
+    :root {
+        --primary-color: #6c5ce7;
+        --primary-light: #a29bfe;
+        --dark-color: #2d3436;
+        --light-color: #f5f6fa;
+        --success-color: #00b894;
+        --danger-color: #d63031;
+    }
+
     /* Основные стили контейнера */
     .diary-form-container {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
+        max-width: 700px;
+        margin: 3rem auto;
+        padding: 3rem;
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     /* Стили заголовка */
     .form-title {
-        color: var(--primary-color);
-        font-weight: 600;
-        margin-bottom: 1.5rem;
+        color: var(--dark-color);
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        padding-bottom: 1rem;
         position: relative;
-        padding-bottom: 0.5rem;
     }
 
     .form-title:after {
         content: '';
         position: absolute;
         bottom: 0;
-        left: 0;
-        width: 60px;
-        height: 3px;
-        background: var(--primary-color);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+        border-radius: 2px;
+    }
+
+    /* Стили формы */
+    .diary-form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
     }
 
     /* Стили полей формы */
     .form-group {
-        margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--dark-color);
+        letter-spacing: 0.5px;
     }
 
     .form-control, .form-select, .form-file-input {
         border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 12px 16px;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        background-color: #f9f9f9;
+        border-radius: 10px;
+        padding: 14px 18px;
+        font-size: 1.1rem;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        background-color: white;
+        color: var(--dark-color);
+    }
+
+    .form-control::placeholder {
+        color: #b2bec3;
+        font-size: 1rem;
     }
 
     textarea.form-control {
-        min-height: 150px;
+        min-height: 200px;
         resize: vertical;
+        line-height: 1.6;
     }
 
     .form-control:focus, .form-select:focus {
         border-color: var(--primary-color);
-        background-color: white;
-        box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.1);
+        box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.2);
+        outline: none;
     }
 
-    /* Стили для выпадающих списков */
-    .form-select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%23667eea' d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        background-size: 16px;
+    /* Стили для ошибок */
+    .invalid-feedback {
+        color: var(--danger-color);
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+        font-weight: 500;
+    }
+
+    .form-text {
+        font-size: 0.95rem;
+        color: #636e72;
+        margin-top: 0.3rem;
     }
 
     /* Стили кнопок */
     .form-actions {
         display: flex;
-        gap: 1rem;
+        gap: 1.5rem;
         margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
     }
 
     .btn-submit {
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
-        font-weight: 500;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        color: white;
+        flex-grow: 1;
+        box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+    }
+
+    .btn-outline {
+        background: white;
+        color: var(--dark-color);
+        border: 2px solid #dfe6e9;
+        flex-grow: 1;
+    }
+
+    .btn-outline:hover {
+        background: #f5f6fa;
+        border-color: #b2bec3;
+    }
+
+    .btn-danger {
+        background: var(--danger-color);
+        color: white;
+        margin-left: auto;
+        box-shadow: 0 4px 15px rgba(214, 48, 49, 0.2);
+    }
+
+    .btn-danger:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+    }
+
+    .btn i {
+        margin-right: 8px;
+        font-size: 1.2rem;
+    }
+
+    /* Анимация при фокусе */
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(108, 92, 231, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0); }
+    }
+
+    .form-control:focus {
+        animation: pulse 1.5s infinite;
     }
 
     @media (max-width: 768px) {
         .diary-form-container {
-            padding: 1.5rem;
-            margin: 1rem;
+            padding: 2rem;
+            margin: 1.5rem;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
         }
 
         .form-actions {
             flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .btn-danger {
+            margin-left: 0;
+            margin-top: 0.5rem;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container py-4">
+<div class="container py-5">
     <div class="diary-form-container">
         <h2 class="form-title">
             {% if object %}
@@ -104,33 +222,36 @@
             {% endif %}
         </h2>
 
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="diary-form">
             {% csrf_token %}
 
             {% for field in form %}
             <div class="form-group">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                <label for="{{ field.id_for_label }}" class="form-label">
+                    {{ field.label }}
+                    {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
                 {{ field }}
                 {% if field.help_text %}
-                <small class="form-text text-muted">{{ field.help_text }}</small>
+                <small class="form-text">{{ field.help_text }}</small>
                 {% endif %}
                 {% for error in field.errors %}
-                <div class="invalid-feedback d-block">{{ error }}</div>
+                <div class="invalid-feedback">{{ error }}</div>
                 {% endfor %}
             </div>
             {% endfor %}
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary btn-submit">
-                    <i class="bi bi-save me-2"></i>Сохранить
+                <button type="submit" class="btn btn-submit">
+                    <i class="bi bi-save"></i>Сохранить
                 </button>
-                <a href="{% url 'diary:diary_list' %}" class="btn btn-outline-secondary">
-                    <i class="bi bi-x-circle me-2"></i>Отмена
+                <a href="{% url 'diary:diary_list' %}" class="btn btn-outline">
+                    <i class="bi bi-x-circle"></i>Отмена
                 </a>
 
                 {% if object %}
-                <a href="{% url 'diary:diary_delete' object.pk %}" class="btn btn-outline-danger ms-auto">
-                    <i class="bi bi-trash me-2"></i>Удалить
+                <a href="{% url 'diary:diary_delete' object.pk %}" class="btn btn-danger">
+                    <i class="bi bi-trash"></i>Удалить
                 </a>
                 {% endif %}
             </div>
