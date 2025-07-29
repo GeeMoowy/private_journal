@@ -1,0 +1,32 @@
+services:
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app  # Монтирование кода
+      - static_volume:/app/static  # Отдельный том для статики
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16.9
+    env_file:
+      - ./.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  static_volume:
