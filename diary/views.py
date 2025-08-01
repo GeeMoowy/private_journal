@@ -1,6 +1,7 @@
+from django.db.models import Q
 from django.core.exceptions import PermissionDenied
 from django.views.generic import ListView, UpdateView, DetailView, DeleteView, CreateView, TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 
@@ -28,7 +29,23 @@ class DiaryListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         # Только записи текущего пользователя + сортировка по дате
-        return Diary.objects.filter(owner=self.request.user).order_by('-created_at')
+        queryset = Diary.objects.filter(owner=self.request.user).order_by('-created_at')
+
+        # Получаем поисковый запрос из параметра 'q' в URL
+        search_query = self.request.GET.get('q')
+
+        if search_query:
+            # Ищем по заголовку (регистронезависимо)
+            queryset = queryset.filter(
+                Q(title__icontains=search_query) | Q(content__icontains=search_query)
+            ).distinct()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Добавляем поисковый запрос в контекст для отображения в форме
+        context['search_query'] = self.request.GET.get('q', '')
+        return context
 
 
 class DiaryDetailView(LoginRequiredMixin, DetailView):
