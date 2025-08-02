@@ -58,8 +58,12 @@ class CustomUser(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     def save(self, *args, **kwargs):
-        if not self.nickname:  # Если nickname не указан
-            self.nickname = self.email.split('@')[0]  # Берем часть до @
+        """Сохраняет данные профиля пользователя с автоматической обработкой никнейма. Если поле nickname не заполнено,
+        автоматически генерирует значение на основе email, используя часть адреса до символа '@'. Это гарантирует,
+        что у каждого пользователя будет уникальный идентификатор для отображения."""
+
+        if not self.nickname:
+            self.nickname = self.email.split('@')[0]
         super().save(*args, **kwargs)
 
     def __str__(self):

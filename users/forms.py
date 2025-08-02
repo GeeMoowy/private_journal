@@ -80,6 +80,59 @@ class RegisterForm(UserCreationForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    """Форма для редактирования профиля пользователя. Позволяет пользователям обновлять персональную информацию профиля,
+    включая аватар и никнейм. Форма включает валидацию вводимых данных и кастомизированные виджеты
+    для улучшенного пользовательского опыта:
+        avatar: Поле для загрузки изображения профиля (FileInput)
+        nickname: Текстовое поле для ввода псевдонима (TextInput)
+
+        Methods:
+            clean_nickname(): Валидация никнейма (минимум 3 символа)
+
+        Meta:
+            model (CustomUser): Связанная модель пользователя
+            fields (list): Доступные для редактирования поля профиля
+            widgets (dict): Кастомизированные элементы управления полями
+            help_texts (dict): Подсказки для полей формы
+            labels (dict): Человекочитаемые названия полей"""
+
     class Meta:
+        """Мета-класс для настройки поведения формы
+            model: Модель CustomUser для связи с формой
+            fields: Поля модели, включенные в форму
+            widgets: HTML-атрибуты и классы для полей ввода
+            help_texts: Тексты подсказок под полями ввода
+            labels: Отображаемые названия полей формы"""
+
         model = CustomUser
         fields = ['avatar', 'nickname']
+        widgets = {
+            'avatar': forms.FileInput(attrs={
+                'class': 'form-control-file',
+                'accept': 'image/*'
+            }),
+            'nickname': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите ваш псевдоним'
+            })
+        }
+        help_texts = {
+            'avatar': 'Загрузите изображение для вашего профиля',
+            'nickname': 'Укажите псевдоним, который будут видеть другие пользователи'
+        }
+        labels = {
+            'avatar': 'Аватар профиля',
+            'nickname': 'Ваш псевдоним'
+        }
+
+    def clean_nickname(self):
+        """Валидация поля nickname. Проверяет, что никнейм содержит минимум 3 символа.
+            Возвращает:
+                str: Валидный никнейм
+            Raises:
+                forms.ValidationError: Если никнейм слишком короткий"""
+
+        nickname = self.cleaned_data.get('nickname')
+        if len(nickname) < 3:
+            raise forms.ValidationError("Никнейм должен содержать минимум 3 символа")
+        return nickname

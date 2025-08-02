@@ -3,7 +3,19 @@ from django.db import models
 
 
 class Diary(models.Model):
-    """ """
+    """Модель для хранения записей персонального дневника.
+    Позволяет пользователям создавать, хранить и организовывать свои записи.
+    Каждая запись содержит текстовое содержание, метаданные и дополнительные атрибуты.
+    Поля:
+        owner (ForeignKey): Ссылка на пользователя-владельца записи
+        created_at (DateTimeField): Дата и время создания записи. Заполняется автоматически при создании
+        title (CharField): Заголовок записи
+        content (TextField): Основное текстовое содержание записи
+        mood (CharField): Поле для обозначения настроения во время создания записи
+        image (ImageField): Поле для загрузки изображений
+        is_public (BooleanField): Флаг публичности записи
+        read_time (PositiveSmallIntegerField): Расчетное время чтения записи в минутах. Заполняется автоматически
+            при сохранении на основе количества слов в content"""
 
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -59,6 +71,13 @@ class Diary(models.Model):
     )
 
     class Meta:
+        """Мета-настройки модели Diary.
+            Attributes:
+                verbose_name (str): Человекочитаемое имя модели в единственном числе
+                verbose_name_plural (str): Человекочитаемое имя модели во множественном числе
+                permissions (list): Дополнительные права доступа, связанные с этой моделью.
+                    Включает право на удаление публичных записей"""
+
         verbose_name = 'Дневник'
         verbose_name_plural = 'Дневники'
         permissions = [
@@ -69,7 +88,10 @@ class Diary(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        # Всегда пересчитываем время чтения, если есть содержимое
+        """Переопределение метода сохранения записи. Автоматически рассчитывает время чтения записи на основе
+        количества слов. Использует стандартную скорость чтения 200 слов в минуту.
+        Минимальное время чтения - 1 минута"""
+
         if self.content:
             word_count = len(self.content.split())
             self.read_time = max(1, round(word_count / 200))

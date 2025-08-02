@@ -21,21 +21,13 @@ class RegisterView(View):
     form_class = RegisterForm
 
     def get(self, request):
-        """Обработка GET-запроса.
-            Args:
-                request: Объект HttpRequest.
-            Returns:
-                HttpResponse с формой регистрации"""
+        """Обработка GET-запроса"""
 
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        """Обработка POST-запроса.
-            Args:
-                request: Объект HttpRequest с данными формы.
-            Returns:
-                HttpResponse с формой (если данные невалидны) или редирект на главную страницу (если успешно)"""
+        """Обработка POST-запроса"""
 
         form = self.form_class(request.POST, request.FILES)
         if form.is_valid():
@@ -46,6 +38,18 @@ class RegisterView(View):
 
 
 class ProfileEditView(UpdateView):
+    """Представление для редактирования профиля пользователя. Предоставляет функционал для обновления существующего
+    профиля пользователя. Автоматически использует текущего аутентифицированного пользователя в качестве объекта для
+    редактирования.
+        Атрибуты:
+            model (Model): Модель User, которая будет редактироваться.
+            form_class (Form): Класс формы для редактирования профиля (UserProfileForm).
+            template_name (str): Шаблон для отображения страницы редактирования ('profile.html').
+            context_object_name (str): Имя объекта в контексте шаблона ('user').
+            success_url (str): URL для перенаправления после успешного обновления профиля (reverse_lazy('diary:home')).
+        Методы:
+            get_object: Возвращает экземпляр текущего аутентифицированного пользователя для редактирования"""
+
     model = User
     form_class = UserProfileForm
     template_name = 'profile.html'
@@ -53,4 +57,11 @@ class ProfileEditView(UpdateView):
     success_url = reverse_lazy('diary:home')
 
     def get_object(self, queryset=None):
+        """Получает объект пользователя для редактирования. Переопределяет метод get_object родительского класса,
+        чтобы всегда возвращать текущего аутентифицированного пользователя.
+            Аргументы:
+                queryset: Не используется (оставлен для совместимости с родительским классом).
+            Возвращает:
+                User: Экземпляр текущего аутентифицированного пользователя"""
+
         return self.request.user
