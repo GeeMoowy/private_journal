@@ -14,7 +14,6 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <!-- Аватар -->
                         <div class="mb-4 text-center">
                             {% if form.instance.avatar %}
                                 <img src="{{ form.instance.avatar.url }}"
@@ -35,7 +34,6 @@
                             </div>
                         </div>
 
-                        <!-- Никнейм -->
                         <div class="form-group mb-4">
                             <label for="{{ form.nickname.id_for_label }}">Никнейм</label>
                             {{ form.nickname }}
@@ -46,7 +44,6 @@
                             {% endif %}
                         </div>
 
-                        <!-- Кнопки -->
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">Сохранить</button>
                             <a href="{% url 'diary:home' %}" class="btn btn-secondary">Отмена</a>

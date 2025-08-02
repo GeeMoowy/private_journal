@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">  <!-- Лучше указать конкретный язык -->
+<html lang="ru">
 <head>
     {% load static %}
     <meta charset="utf-8">
@@ -7,16 +7,16 @@
     <meta name="description" content="{% block description %}Описание сайта{% endblock %}">
     <title>{% block title %}Мой сайт{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    {% block extra_css %}{% endblock %}  <!-- Для дополнительных CSS -->
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    {% include 'includes/header.html' %}  <!-- Если есть хедер -->
+    {% include 'includes/header.html' %}
 
     <main class="container mt-5">
         {% block content %}{% endblock %}
     </main>
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}" defer></script>
-    {% block extra_js %}{% endblock %}  <!-- Для дополнительных JS -->
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
