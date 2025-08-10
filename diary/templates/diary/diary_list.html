@@ -1,0 +1,159 @@
+{% extends 'diary/base.html' %}
+
+{% block title %}Мои записи{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .diary-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        background-color: white;
+    }
+
+    .diary-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-text {
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    .mood-badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        border-radius: 12px;
+        background-color: var(--bg-color);
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .read-time {
+        background-color: rgba(0, 0, 0, 0.05);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-5 fw-bold">Мои записи</h1>
+        <a href="{% url 'diary:diary_create' %}" class="btn btn-primary rounded-pill px-4">
+            <i class="bi bi-plus-lg me-2"></i>Новая запись
+        </a>
+    </div>
+    <div class="mb-4">
+        <form method="get" action="{% url 'diary:diary_list' %}" class="row g-3">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input type="text"
+                           name="q"
+                           class="form-control rounded-pill"
+                           placeholder="Поиск по заголовку..."
+                           value="{{ request.GET.q }}">
+                    <button type="submit" class="btn btn-outline-primary rounded-pill">
+                        <i class="bi bi-search"></i> Найти
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                {% if request.GET.q %}
+                <a href="{% url 'diary:diary_list' %}" class="btn btn-outline-secondary rounded-pill">
+                    <i class="bi bi-x-lg"></i> Сбросить
+                </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    {% for diary in diaries %}
+    <div class="diary-card card mb-4">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="flex-grow-1">
+                    <h5 class="card-title">{{ diary.title }}</h5>
+                    <p class="card-text">{{ diary.content|truncatechars:200 }}</p>
+                </div>
+                <span class="mood-badge" style="background-color: {{ diary.get_mood_color }};">
+                    {{ diary.get_mood_display }}
+                </span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="d-flex align-items-center">
+                    <small class="text-muted me-3">
+                        <i class="bi bi-calendar me-1"></i>{{ diary.created_at|date:"d.m.Y" }}
+                    </small>
+                    <small class="read-time">
+                        <i class="bi bi-clock me-1"></i>{{ diary.read_time }} мин.
+                    </small>
+                </div>
+                <a href="{% url 'diary:diary_detail' diary.pk %}"
+                   class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                    Читать <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="bi bi-journal-text"></i>
+        </div>
+        <h4 class="mb-3">Записей пока нет</h4>
+        <p class="text-muted mb-4">Начните свой дневник с первой записи</p>
+        <a href="{% url 'diary:diary_create' %}" class="btn btn-primary rounded-pill px-4">
+            <i class="bi bi-plus-lg me-2"></i>Создать запись
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Анимация при наведении на карточки
+    document.querySelectorAll('.diary-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+        });
+    });
+</script>
+{% endblock %}

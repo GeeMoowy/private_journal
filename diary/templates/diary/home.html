@@ -1,0 +1,250 @@
+{% extends 'diary/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<section class="hero-section bg-gradient-primary text-white py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center mb-4">
+            <div class="col">
+                <h1 class="text-center" style="font-size: 6rem; width: 100%;">Дипломная работа</h1>
+            </div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                {% if not user.is_authenticated %}
+                <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInDown">Дорогой гость, добро пожаловать в ваш личный дневник</h1>
+                <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">Запечатлейте свои мысли, эмоции и воспоминания в безопасном пространстве</p>
+                <div class="d-flex gap-3 animate__animated animate__fadeIn animate__delay-2s">
+                    <a href="{% url 'users:register' %}" class="btn btn-light btn-lg px-4">Начать сейчас</a>
+                    <a href="{% url 'users:login' %}" class="btn btn-outline-light btn-lg px-4">Войти</a>
+                </div>
+                {% else %}
+                <h1 class="display-4 fw-bold mb-4 animate__animated animate__fadeInDown">{{ user.nickname|default:user.email }}, добро пожаловать в твой личный дневник</h1>
+                <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">Запечатлейте свои мысли, эмоции и воспоминания в безопасном пространстве</p>
+                <a href="{% url 'diary:diary_list' %}" class="btn btn-light btn-lg px-4 animate__animated animate__fadeIn animate__delay-2s">
+                    К записям <i class="bi bi-sticky ms-2"></i>
+                </a>
+                <a href="{% url 'diary:public_list' %}" class="btn btn-light btn-lg px-4 animate__animated animate__fadeIn animate__delay-2s">
+                    К пабликам <i class="bi bi-table ms-2"></i>
+                </a>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="{% static 'images/diary-hero-male.svg' %}"
+     alt="Дневник"
+     class="img-fluid animate__animated animate__fadeInRight"
+     data-male-src="{% static 'images/diary-hero-male.svg' %}"
+     data-female-src="{% static 'images/diary-hero-female.svg' %}">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <h2 class="text-center mb-5">Почему стоит вести дневник?</h2>
+        <div class="row g-4">
+            <div class="col-md-4 feature-card">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-4">
+                            <i class="bi bi-journal-bookmark fs-1"></i>
+                        </div>
+                        <h3>Анализ мыслей</h3>
+                        <p>Упорядочивайте идеи и находите новые решения</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 feature-card">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle mx-auto mb-4">
+                            <i class="bi bi-emoji-smile fs-1"></i>
+                        </div>
+                        <h3>Отслеживание настроения</h3>
+                        <p>Фиксируйте эмоции с помощью удобных тегов</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 feature-card">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle mx-auto mb-4">
+                            <i class="bi bi-shield-lock fs-1"></i>
+                        </div>
+                        <h3>Полная конфиденциальность</h3>
+                        <p>Ваши записи доступны только вам</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <div class="position-relative">
+                    <div class="position-absolute top-0 start-0 translate-middle z-0">
+                        <div class="bg-primary bg-opacity-10 rounded-circle" style="width: 300px; height: 300px;"></div>
+                    </div>
+                    <img src="{% static 'images/app-screenshot.png' %}"
+                         class="img-fluid rounded shadow position-relative z-1"
+                         alt="Интерфейс дневника">
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-1 pe-lg-5">
+                <h2 class="mb-4">Простота и удобство</h2>
+                <ul class="list-unstyled">
+                    <li class="mb-3 d-flex">
+                        <span class="me-3 text-primary"><i class="bi bi-check-circle-fill fs-4"></i></span>
+                        <div>
+                            <h5>Интуитивный интерфейс</h5>
+                            <p class="text-muted">Записывайте мысли в один клик без сложного обучения</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex">
+                        <span class="me-3 text-primary"><i class="bi bi-check-circle-fill fs-4"></i></span>
+                        <div>
+                            <h5>Доступ с любого устройства</h5>
+                            <p class="text-muted">Работает на компьютерах, планшетах и телефонах</p>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex">
+                        <span class="me-3 text-primary"><i class="bi bi-check-circle-fill fs-4"></i></span>
+                        <div>
+                            <h5>Экспорт данных</h5>
+                            <p class="text-muted">Скачивайте записи в PDF для печати или архивации</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <h2 class="text-center mb-5">Что говорят пользователи</h2>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 p-lg-5">
+                        <div class="owl-carousel testimonials-carousel">
+                            <div class="text-center">
+                                <div class="mb-4">
+                                    <img src="{% static 'images/avatar1.jpg' %}"
+                                         class="rounded-circle shadow-sm"
+                                         width="80"
+                                         alt="Аватар">
+                                </div>
+                                <p class="lead mb-4">"Этот дневник изменил мою жизнь! Теперь я лучше понимаю свои эмоции."</p>
+                                <h5 class="mb-1">Анна К.</h5>
+                                <small class="text-muted">Пользователь 2 года</small>
+                            </div>
+                            <div class="text-center">
+                                <div class="mb-4">
+                                    <img src="{% static 'images/avatar2.jpg' %}"
+                                         class="rounded-circle shadow-sm"
+                                         width="80"
+                                         alt="Аватар">
+                                </div>
+                                <p class="lead mb-4">"Лучшее приложение для саморефлексии. Простое, но мощное."</p>
+                                <h5 class="mb-1">Михаил С.</h5>
+                                <small class="text-muted">Пользователь 1 год</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<style>
+    :root, .male-theme {
+        --primary-color: #667eea;
+        --secondary-color: #764ba2;
+        --bg-color: #f8f9fa;
+        --text-color: #212529;
+    }
+
+    .female-theme {
+        --primary-color: #ff6b9a;
+        --secondary-color: #ff8fab;
+        --bg-color: #fff0f5;
+        --text-color: #5a3d3d;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    }
+
+    .feature-icon.bg-primary {
+        background-color: var(--primary-color) !important;
+    }
+
+    /* Исправление конфликтов */
+    .bg-light {
+        background-color: var(--bg-color) !important;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const maleBtn = document.getElementById('male-theme');
+    const femaleBtn = document.getElementById('female-theme');
+    const heroImage = document.querySelector('.hero-section img');
+
+    maleBtn.addEventListener('click', function() {
+        document.documentElement.classList.remove('female-theme');
+        document.documentElement.classList.add('male-theme');
+        if (heroImage) {
+            heroImage.src = heroImage.dataset.maleSrc;
+        }
+        localStorage.setItem('theme', 'male');
+    });
+
+    femaleBtn.addEventListener('click', function() {
+        document.documentElement.classList.remove('male-theme');
+        document.documentElement.classList.add('female-theme');
+        if (heroImage) {
+            heroImage.src = heroImage.dataset.femaleSrc;
+        }
+        localStorage.setItem('theme', 'female');
+    });
+
+    // Проверка темы при загрузке
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'female') {
+        document.documentElement.classList.add('female-theme');
+        if (heroImage) {
+            heroImage.src = heroImage.dataset.femaleSrc;
+        }
+    } else {
+        document.documentElement.classList.add('male-theme');
+        if (heroImage) {
+            heroImage.src = heroImage.dataset.maleSrc;
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'diary/base.html' %}
+
+{% block title %}Паблик{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>{{ diary.title }}</h4>
+                <span class="badge bg-primary">Публичная запись</span>
+            </div>
+        </div>
+
+        <div class="card-body">
+            {% if diary.image %}
+            <img src="{{ diary.image.url }}" class="img-fluid rounded mb-4" alt="{{ diary.title }}">
+            {% endif %}
+
+            <div class="diary-content mb-4">
+                {{ diary.content|linebreaks }}
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted">
+                        Автор: {{ diary.owner.nickname|default:diary.owner.email }} •
+                        {{ diary.created_at|date:"d.m.Y H:i" }}
+                    </span>
+                </div>
+                <span class="badge bg-secondary">{{ diary.get_mood_display }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'diary:public_list' %}" class="btn btn-secondary">
+            ← К списку публичных записей
+        </a>
+        {% if perms.diary.can_delete_public_diaries %}
+            <a href="{% url 'diary:diary_delete' diary.pk %}" class="btn btn-danger">
+                Удалить запись
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
